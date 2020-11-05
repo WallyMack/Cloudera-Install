@@ -38,7 +38,7 @@ Modification History
 
 * * *
 
-# 2. 系統環境(System Design)
+# 2. 系統環境(System Design)
 
 各主機配備一覽表
 
@@ -51,7 +51,7 @@ Modification History
 |HAProxy VIP | 10.0.40.120|
 
 ## 2.1 OS系統環境設置
-確認群集內所有主機的IP與主機名稱對應關係(所有節點)，指令如下：
+確認群集內所有主機的IP與主機名稱對應關係(所有節點)，指令如下：
 >cat /etc/hosts 
 
 ![IP_Host](https://i.imgur.com/pN0BDJM.png)
@@ -72,7 +72,7 @@ sudo vim /etc/sysctl.conf
 ![last_line](https://i.imgur.com/tsJakbo.png)
 
 >編輯檔案，設定關閉IPV6以及設定Swappiness數值，指令如下：  
-按一下鍵盤i(進入編輯模式，左下角出現"INSERT")，並貼上設定  
+按一下鍵盤i(進入編輯模式，左下角出現"INSERT")，並貼上設定  
 net.ipv6.conf.all.disable_ipv6=1  
 net.ipv6.conf.default.disable_ipv6=1  
 net.ipv6.conf.lo.disable_ipv6=1  
@@ -81,8 +81,8 @@ vm.swappiness=1
 ![off＿ipv6](https://i.imgur.com/xPaxqBi.png)
 
 >按一下鍵盤ESC(離開編輯模式，左下角“INSERT"消失)  
-儲存檔案並離開，指令如下：  
-:wq  
+儲存檔案並離開，指令如下：  
+:wq  
 
 ![exit_vim](https://i.imgur.com/EM7wd6o.png)
 
@@ -93,12 +93,12 @@ ifconfig
 
 ![IPV6](https://i.imgur.com/RnopP4d.png)
 
->優化OS系統硬碟的讀取速度(所有節點)，指令如下：  
+>優化OS系統硬碟的讀取速度(所有節點)，指令如下：  
 sudo vim /etc/rc.local  
 
 ![IO](https://i.imgur.com/ES1kLka.png)
 
->按一下鍵盤i(進入編輯模式，左下角出現"INSERT")，並貼上設定  
+>按一下鍵盤i(進入編輯模式，左下角出現"INSERT")，並貼上設定  
 blockdev --setra 8192 /dev/sda  
 echo deadline > /sys/block/sda/queue/scheduler  
 echo never > /sys/kernel/mm/transparent_hugepage/defrag  
@@ -106,15 +106,15 @@ echo never > /sys/kernel/mm/transparent_hugepage/defrag
 ![IO_1](https://i.imgur.com/PiHSqjE.png)
 
 >按一下鍵盤ESC(離開編輯模式，左下角“INSERT"消失)  
-儲存檔案並離開，指令如下：  
-:wq  
+儲存檔案並離開，指令如下：  
+:wq  
 
-安裝NTP服務讓叢集主機時間一致性(所有主機)  
+安裝NTP服務讓叢集主機時間一致性(所有主機)  
 >sudo apt-get install ntp  
 sudo apt install ntpdate  
 sudo apt install ntpstat  
 確認NTP服務是否啟動  
-sudo systemctl status ntp.service  
+sudo systemctl status ntp.service  
 
 ![NTP_1](https://i.imgur.com/Exb2DZ2.png)
 
@@ -128,8 +128,8 @@ systemctl status ntp.service
 >變更設定檔，指令如下：  
 sudo vim /etc/ntp.conf  
 /prefer  
-按一下鍵盤i(進入編輯模式，左下角出現"INSERT")，並貼上設定  
-server 10.0.10.102 prefer maxpoll 6 (兩台ＮameNode主機對時，10.0.10.102 詢問網管公司內部  NTP Server IP)  
+按一下鍵盤i(進入編輯模式，左下角出現"INSERT")，並貼上設定  
+server 10.0.10.102 prefer maxpoll 6 (兩台ＮameNode主機對時，10.0.10.102 詢問網管公司內部  NTP Server IP)  
 
 ![NTP_3](https://i.imgur.com/TxEy9y1.png)
 
@@ -163,7 +163,7 @@ sudo systemctl start ntp.service
 * * *
 
 # 3. 安裝資料庫
-Cloudera 將許多Config以及MetaData存放於Database裡面，故需安裝外部的資料庫  
+Cloudera 將許多Config以及MetaData存放於Database裡面，故需安裝外部的資料庫  
 
 步驟如下：  
 3.1. 登入主機cloudera01以及cloudera02，指令如下：
@@ -178,12 +178,12 @@ Cloudera 將許多Config以及MetaData存放於Database裡面，故需安裝外
 
 ![MYSQL_Version](https://i.imgur.com/EpvO4LX.png)
 
-3.4.關閉MySQL Server 確保資料庫沒在運行，指令如下：
+3.4.關閉MySQL Server 確保資料庫沒在運行，指令如下：
 >sudo service mysql stop
 
-3.5.根據Cloudera 官方推薦設置MySQL Config，指令如下：
+3.5.根據Cloudera 官方推薦設置MySQL Config，指令如下：
 >sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf   
-註解 bind-address = 127.0.0.1 增加時間設定參數(讓機器可以遠端存取)，指令如下：  
+註解 bind-address = 127.0.0.1 增加時間設定參數(讓機器可以遠端存取)，指令如下：  
 /bind  
 log_timestamps=SYSTEM (預設Log時間為UTC改為系統時間)  
 
@@ -194,7 +194,7 @@ log_timestamps=SYSTEM (預設Log時間為UTC改為系統時間)
 
 ![MySQL](https://i.imgur.com/rIkzgPV.png)
 
->按一下鍵盤i(進入編輯模式，左下角出現"INSERT")，並貼上設定  
+>按一下鍵盤i(進入編輯模式，左下角出現"INSERT")，並貼上設定  
 [mysqld]  
 server-id = 1  [兩台MySQL編號不能相同]
 transaction-isolation = READ-COMMITTED  
@@ -249,7 +249,7 @@ sql_mode=STRICT_ALL_TABLES
 ![db_root_2](https://i.imgur.com/uUgKxQJ.png)
 ![db_root_3](https://i.imgur.com/UqFY2y9.png)
 
-3.8.安裝MySQL JDBC驅動程式，針對Cloudera Manager Server用，指令如下：
+3.8.安裝MySQL JDBC驅動程式，針對Cloudera Manager Server用，指令如下：
 >sudo apt-get install libmysql-java
 
 3.9.確認MySQL是否正常，指令如下：
@@ -258,7 +258,7 @@ mysql> show databases; (檢查是否正常查詢)
 
 ![db_check](https://i.imgur.com/GYGYUbg.png)
 
->mysql> show engines; (檢查MySQL是否為InnoDB模式)
+>mysql> show engines; (檢查MySQL是否為InnoDB模式)
 
 ![db_check_2](https://i.imgur.com/TUJFczg.png)
 
@@ -277,7 +277,7 @@ mysql> select host,user from mysql.user;
 
 ![create_account](https://i.imgur.com/Y1y9iYQ.png)
 
-3.11.資料庫備份與移轉，指令如下：  
+3.11.資料庫備份與移轉，指令如下：  
 >mysqldump -u root -p --all-databases --events > /opt/all_mysql_db.sql  
 scp -p /opt/all_mysql_db.sql bdadmin@Cloudera02:/opt/ (將資料庫備份移轉到第二台上面)  
 ssh bdadmin@10.0.40.102 (登入到第二台上，進行資料庫安裝動作至3.9即可)  
@@ -287,7 +287,7 @@ ssh bdadmin@10.0.40.102 (登入到第二台上，進行資料庫安裝動作至3
 
 ![create_second_db](https://i.imgur.com/ItS5atx.png)
 
-3.13.檢查第二台資料庫：
+3.13.檢查第二台資料庫：
 >mysql -uroot -proot123 
 select host,user from mysql.user;
 
@@ -297,18 +297,18 @@ select host,user from mysql.user;
 
 # 4. 建置MySQL Replication(Master-Master)
 
-4.1. 登入第一台MySQL
+4.1. 登入第一台MySQL
 >mysql -uroot -proot123  
 mysql> show master status; (查詢Master資訊)  
 
 ![Master_info_1](https://i.imgur.com/OKbqEv0.png)
 
->設定Ｍaster 資料庫為第二台MySQL (master_log_file &ß master_log_pos 請根據第二台Master資訊填寫)  
+>設定Ｍaster 資料庫為第二台MySQL (master_log_file &ß master_log_pos 請根據第二台Master資訊填寫)  
 mysql> change master to master_host='10.0.40.102',master_port=3306,  master_user='btsync',master_password='btsync!@#',   master_log_file='mysql_binary_log.000002',master_log_pos=784436;  
 
->啟動Slave  
+>啟動Slave  
 mysql> start slave;  
-檢查Slave資訊以及狀態  
+檢查Slave資訊以及狀態  
 mysql> show slave status \G; (正確設定後，無提示任何錯誤訊息，便讓第一台與第二台同步成功)  
 
 ![Master_info_1](https://i.imgur.com/q5a0NuJ.png)
@@ -321,12 +321,12 @@ mysql> show master status \G; (查詢Master資訊)
 
 ![Slave_info_1](https://i.imgur.com/dExfWVo.png)
 
->設定Ｍaster 資料庫為第一台MySQL (master_log_file &ß master_log_pos 請根據第一台Master資訊填寫)  
+>設定Ｍaster 資料庫為第一台MySQL (master_log_file &ß master_log_pos 請根據第一台Master資訊填寫)  
 mysql> change master to master_host='10.0.40.101',master_port=3306,  master_user='btsync',master_password='btsync!@#',  master_log_file='mysql_binary_log.000002',master_log_pos=771;  
 
->啟動Slave  
+>啟動Slave  
 mysql> start slave;  
-檢查Slave資訊以及狀態  
+檢查Slave資訊以及狀態  
 mysql> show slave status \G; (正確設定後，無提示任何錯誤訊息，便讓第二台與第一台同步成功)  
 
 ![Slave_Info](https://i.imgur.com/6I82Qua.png)
@@ -405,10 +405,10 @@ sudo cp -p /usr/share/java/mysql-connector-java-5.1.38.jar
 # 6. 建置Cloudera Manager
 
 建置Cloudera Manager 載點於第一台上
-   
+
 6.1. 根據OS版本，至Cloudera 官網找對應的載點，步驟如下：  
->ssh bdadmin@10.0.40.101   
-lsb_release -a （查詢OS版本）  
+>ssh bdadmin@10.0.40.101   
+lsb_release -a （查詢OS版本）  
 
 ![OS_Version](https://i.imgur.com/UgmT4ni.png)
 
@@ -416,10 +416,10 @@ lsb_release -a （查詢OS版本）
 6.2. 至官方網站查找相對應載點 (所有主機都要做)  
 >從載點網址找到Repo File欄位對應的OS版本，下載後將內容複製起來，之後會貼在cloudera-manager.list檔案內  
 [Cloudera 載點](https://www.cloudera.com/documentation/enterprise/release-notes/topics/cm_vd.html)  
-於底下目錄 /etc/apt/sources.list.d/ 新增 cloudera-manager.list 檔案  
+於底下目錄 /etc/apt/sources.list.d/ 新增 cloudera-manager.list 檔案  
 touch /etc/apt/sources.list.d/cloudera-manager.list  
 sudo vim etc/apt/sources.list.d/cloudera-manager.list  
-按一下鍵盤i(進入編輯模式，左下角出現"INSERT")，並貼上設定  
+按一下鍵盤i(進入編輯模式，左下角出現"INSERT")，並貼上設定  
 \# Packages for Cloudera Manager, Version 5, on Ubuntu 16.04 amd64       
 deb [arch=amd64] http://archive.cloudera.com/cm5/ubuntu/xenial/amd64/cm xenial-cm5 contrib  
 deb-src http://archive.cloudera.com/cm5/ubuntu/xenial/amd64/cm xenial-cm5 contrib  
@@ -428,8 +428,8 @@ deb-src http://archive.cloudera.com/cm5/ubuntu/xenial/amd64/cm xenial-cm5 contri
 
 >sudo apt-get update  
 如果發生金鑰問題請執行以下指令：  
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 327574EE02A818DD  
-（327574EE02A818DD 請根據報錯的KEY填寫）  
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 327574EE02A818DD  
+（327574EE02A818DD 請根據報錯的KEY填寫）  
 
 ![Error_Log](https://i.imgur.com/4gi8Ly2.png)
 
@@ -440,20 +440,20 @@ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 327574EE02A818DD
 sudo apt-get install cloudera-manager-daemons cloudera-manager-server (安裝Manager Server 一台即可)  
 
 6.4. 設定Cloudera Manager Database  
-於安裝Manager Server的主機上執行以下指令：  
+於安裝Manager Server的主機上執行以下指令：  
 >sudo /usr/share/cmf/schema/scm_prepare_database.sh mysql -h 10.0.40.101 -uroot -proot1234 --scm-host 10.0.40.101 scm scm scm12345  
 
 ![Cloudera_DB](https://i.imgur.com/DssL6o8.png)
 
-6.5. 啟動Cloudera Manager
+6.5. 啟動Cloudera Manager
 >sudo systemctl start cloudera-scm-server.service   
 檢查是否有誤  
 sudo systemctl status cloudera-scm-server.service  
 
 ![Cloudera_Manager](https://i.imgur.com/yZV6j3H.png)
 
-6.6. 登入Cloudera Manager Admin Console
-打開習慣的瀏覽器，輸入Cloudera Manager主機的IP，指令如下：
+6.6. 登入Cloudera Manager Admin Console
+打開習慣的瀏覽器，輸入Cloudera Manager主機的IP，指令如下：
 >http://10.0.40.101:7180/  
 預設帳號及密碼：admin  
 
@@ -473,7 +473,7 @@ sudo systemctl status cloudera-scm-server.service
 ![CM_4](https://i.imgur.com/6Jjrwi0.png)
 
 >設定要安裝的主機IP後點擊Search  
-10.0.40.101,10.0.40.102,10.0.40.103,10.0.40.104 (IP之間用逗號隔開)  
+10.0.40.101,10.0.40.102,10.0.40.103,10.0.40.104 (IP之間用逗號隔開)  
 
 ![CM_5](https://i.imgur.com/RY2VCtL.png)
 
@@ -519,18 +519,18 @@ sudo systemctl status cloudera-scm-server.service
 
 >開始安裝Hadoop Ecosystem，選擇Custom Services，點擊Continue
 
-![CM_16](https://i.imgur.com/EYjD3Fs.png)
+![CM_16](https://i.imgur.com/EYjD3Fs.png)
 
 >配置Hadoop Ecosystem到規劃好的主機上
 
 ![CM_17](https://i.imgur.com/dMpCh2f.png)
 
->設定Hadoop Ecosystem存取的資料庫，相關資訊參考目錄第五點
+>設定Hadoop Ecosystem存取的資料庫，相關資訊參考目錄第五點
 
 ![CM_18](https://i.imgur.com/0EisKyP.png)
 ![CM_19](https://i.imgur.com/bBdtjf3.png)
 
->服務相關設定，檢查Data Directory是否正確以及設定Kudu，點擊Continue  
+>服務相關設定，檢查Data Directory是否正確以及設定Kudu，點擊Continue  
 Kudu Master WAL Directory：/var/lib/kudu/master  
 Kudu Master Data Directories：/var/lib/kudu/master  
 Kudu Tablet Server WAL Directory：/var/lib/kudu/tserver  
@@ -566,22 +566,22 @@ Kudu Tablet Server Data Directories：/var/lib/kudu/tserver
 設定開始，正常情況下Formate The Name Directory會失敗，點擊Continue
 ![HDFS_HA_6](https://i.imgur.com/lWjD3OV.png)
 ![HDFS_HA_7](https://i.imgur.com/hcGnP2J.png)
-設定完成，點擊Finish
+設定完成，點擊Finish
 ![HDFS_HA_8](https://i.imgur.com/C0iIBzJ.png)
 
 * * *
 
 # 8. 啟用Hive To Use HDFS HA
-透過Cloudera Manager頁面，依序關閉Hue，Oozie，Impala，Hive  
+透過Cloudera Manager頁面，依序關閉Hue，Oozie，Impala，Hive  
 點擊服務旁邊的下拉式選單，選擇Stop  
 ![Hive_HA](https://i.imgur.com/YXJtqxK.png)
-透過Cloudera Manager頁面，點擊Hive，點擊Actions下拉式選單，選取Update Hive Matastore NameNodes  
+透過Cloudera Manager頁面，點擊Hive，點擊Actions下拉式選單，選取Update Hive Matastore NameNodes  
 ![Hive_HA_1](https://i.imgur.com/dq08pfD.png)
 選取Update Hive Matastore NameNodes
 ![Hive_HA_2](https://i.imgur.com/N0I5ehG.png)
 完成後點擊Close
 ![Hive_HA_3](https://i.imgur.com/gMqAu7S.png)
-回到Cloudera Manager頁面，依序啟動Hive，Impala，Ooziw，Hue
+回到Cloudera Manager頁面，依序啟動Hive，Impala，Ooziw，Hue
 
 設定Hive Metastore HA，透過Cloudera Manager頁面，點擊Hive，點擊Configuration
 ![Hive_HA_4](https://i.imgur.com/D2rrVj9.png)
@@ -589,7 +589,7 @@ Kudu Tablet Server Data Directories：/var/lib/kudu/tserver
 ![Hive_HA_5](https://i.imgur.com/oX6e7Uu.png)
 選擇org.apache.hadoop.hive.thrift.DBTokenStore，點擊Save Changes
 ![Hive_HA_6](https://i.imgur.com/PCQtuCW.png)
-透過Cloudera Manager頁面，點選設定變更圖示，點擊Restart Stale Services，Restart Now
+透過Cloudera Manager頁面，點選設定變更圖示，點擊Restart Stale Services，Restart Now
 ![Hive_HA_7](https://i.imgur.com/hXQdpuj.png)
 ![Hive_HA_8](https://i.imgur.com/aux6bIx.png)
 ![Hive_HA_9](https://i.imgur.com/ZEdlLWx.png)
@@ -599,7 +599,7 @@ Kudu Tablet Server Data Directories：/var/lib/kudu/tserver
 * * *
 
 # 9. 啟用YARN HA
-透過Cloudera Manager頁面，點擊YARN，點擊Actions下拉式選單，選取Enable High Availability
+透過Cloudera Manager頁面，點擊YARN，點擊Actions下拉式選單，選取Enable High Availability
 ![YARN_HA](https://i.imgur.com/dp0dkhz.png)
 選擇想安裝的主機，點擊Continue
 ![YARN_HA_1](https://i.imgur.com/EQHTLnG.png)
@@ -608,14 +608,14 @@ Kudu Tablet Server Data Directories：/var/lib/kudu/tserver
 
 * * *
 
-# 10. HAProxy + Keepalived 達到 Load Balance + HA
+# 10. HAProxy + Keepalived 達到 Load Balance + HA
 安裝HAProxy，指令如下(選兩台主機安裝)：
 >sudo apt-get install haproxy  
-備份HAProxy設定檔，指令如下：  
+備份HAProxy設定檔，指令如下：  
 sudo cp -p /etc/haproxy/haproxy.cfg
 /etc/haproxy/haproxy.cfg.backup  
 編輯設定檔，指令如下  
-sudo vim /etc/haproxy/haproxy.cfg  
+sudo vim /etc/haproxy/haproxy.cfg  
 貼入以下設定： 
 global  
     \# To have these messages end up in    /var/log/haproxy.log you will  
@@ -709,7 +709,7 @@ bind 10.0.40.120:21051
 
 安裝Keepalived，指令如下(與HAProxy兩台同主機)：  
 >sudo apt-get install keepalived  
-編輯Keepalived設定檔，指令如下：  
+編輯Keepalived設定檔，指令如下：  
 sudo vim /etc/keepalived/keepalived.conf  
 global_defs {  
 router_id LVS_DEVEL  
@@ -771,7 +771,7 @@ fi
 
 設定HAProxy Log，指令如下：
 >sudo vim /etc/rsyslog.conf  
-拿掉兩個註解並且新增一行  
+拿掉兩個註解並且新增一行  
 \# provides UDP syslog reception  
 \#module(load="imudp")  
 \#input(type="imudp" port="514")  
@@ -791,7 +791,7 @@ local2.*                        /var/log/haproxy.log
 sudo systemctl restart keepalived.service  
 sudo systemctl restart rsyslog.service 
 
-檢查是否有成功抓到虛擬IP(安裝的主機個別檢查)，指令如下：
+檢查是否有成功抓到虛擬IP(安裝的主機個別檢查)，指令如下：
 >ip a s
 
 ![HAPROXY](https://i.imgur.com/59DyosH.png)
